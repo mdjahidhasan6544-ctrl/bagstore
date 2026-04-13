@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { Package, ShoppingCart, Users, Plus, Pencil, Trash2, CheckCircle2, Upload } from 'lucide-react';
 import useAuthStore from '../store/useAuthStore';
+import { API_BASE_URL, apiUrl } from '../lib/api';
 
 const emptyProduct = {
   name: '',
@@ -47,10 +48,10 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       const [overviewRes, productsRes, ordersRes, usersRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/admin/overview', config),
-        axios.get('http://localhost:5000/api/admin/products', config),
-        axios.get('http://localhost:5000/api/admin/orders', config),
-        axios.get('http://localhost:5000/api/admin/users', config),
+        axios.get(apiUrl('/api/admin/overview'), config),
+        axios.get(apiUrl('/api/admin/products'), config),
+        axios.get(apiUrl('/api/admin/orders'), config),
+        axios.get(apiUrl('/api/admin/users'), config),
       ]);
 
       setOverview(overviewRes.data);
@@ -123,13 +124,13 @@ const AdminDashboard = () => {
       const formData = new FormData();
       formData.append('image', resized);
 
-      const response = await axios.post('http://localhost:5000/api/admin/upload', formData, {
+      const response = await axios.post(apiUrl('/api/admin/upload'), formData, {
         headers: {
           Authorization: `Bearer ${userInfo?.token}`,
         },
       });
 
-      const fullUrl = `http://localhost:5000${response.data.imageUrl}`;
+      const fullUrl = `${API_BASE_URL}${response.data.imageUrl}`;
       setForm((prev) => ({
         ...prev,
         images: [...normalizeImages(prev.images), fullUrl],
@@ -152,9 +153,9 @@ const AdminDashboard = () => {
     };
 
     if (editingId) {
-      await axios.put(`http://localhost:5000/api/admin/products/${editingId}`, payload, config);
+      await axios.put(apiUrl(`/api/admin/products/${editingId}`), payload, config);
     } else {
-      await axios.post('http://localhost:5000/api/admin/products', payload, config);
+      await axios.post(apiUrl('/api/admin/products'), payload, config);
     }
 
     resetForm();
@@ -172,17 +173,17 @@ const AdminDashboard = () => {
   };
 
   const deleteProduct = async (id) => {
-    await axios.delete(`http://localhost:5000/api/admin/products/${id}`, config);
+    await axios.delete(apiUrl(`/api/admin/products/${id}`), config);
     loadAdminData();
   };
 
   const markDelivered = async (id) => {
-    await axios.put(`http://localhost:5000/api/admin/orders/${id}/deliver`, {}, config);
+    await axios.put(apiUrl(`/api/admin/orders/${id}/deliver`), {}, config);
     loadAdminData();
   };
 
   const toggleAdmin = async (user) => {
-    await axios.put(`http://localhost:5000/api/admin/users/${user._id}`, {
+    await axios.put(apiUrl(`/api/admin/users/${user._id}`), {
       name: user.name,
       email: user.email,
       isAdmin: !user.isAdmin,

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import useCartStore from '../store/useCartStore';
 import useAuthStore from '../store/useAuthStore';
+import { apiUrl } from '../lib/api';
 
 const Checkout = () => {
     const { cartItems, getCartTotal, clearCart } = useCartStore();
@@ -32,7 +33,7 @@ const Checkout = () => {
                 }
             } : {};
 
-            await axios.post('http://localhost:5000/api/orders', {
+            await axios.post(apiUrl('/api/orders'), {
                 orderItems: cartItems.map(item => ({
                     name: item.name,
                     qty: item.qty,

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ShieldCheck, ShoppingBag, Truck } from 'lucide-react';
 import useCartStore from '../store/useCartStore';
+import { apiUrl } from '../lib/api';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -15,7 +16,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const loadProduct = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/products');
+        const res = await axios.get(apiUrl('/api/products'));
         const found = res.data.find((item) => item._id === id);
         if (found) {
           setProduct(found);

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, ShoppingBag, Truck, RefreshCcw, ShieldCheck, Headphones } from 'lucide-react';
 import useCartStore from '../store/useCartStore';
+import { apiUrl } from '../lib/api';
 
 const fallbackFeaturedBags = [
   {
@@ -56,7 +57,7 @@ const Home = () => {
   useEffect(() => {
     const loadFeaturedProducts = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/products');
+        const res = await axios.get(apiUrl('/api/products'));
         if (Array.isArray(res.data) && res.data.length > 0) {
           setFeaturedBags(res.data.slice(0, 4));
         } else {

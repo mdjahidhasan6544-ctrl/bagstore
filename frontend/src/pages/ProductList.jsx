@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, SlidersHorizontal } from 'lucide-react';
 import useCartStore from '../store/useCartStore';
+import { apiUrl } from '../lib/api';
 
 const mockData = [
   { _id: '1', name: 'The Obsidian Weekender', price: 850, category: 'Travel Bag', img: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80' },
@@ -23,7 +24,7 @@ const ProductList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/products');
+        const res = await axios.get(apiUrl('/api/products'));
         setProducts(res.data?.length ? res.data : mockData);
       } catch {
         setProducts(mockData);
